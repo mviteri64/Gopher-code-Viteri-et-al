@@ -44,9 +44,7 @@ ggplot(JR_box, aes(x=Species, y=Age)) +
 wilcox.test(JR_gopher$X14C_age, JR_other$X14C_age, paired=FALSE)
 
 top.of.deposit <- 0
-bottom.of.deposit <- 110 #for PL - based on greatest level number (17), but all other units stop by 10 or 11...
-bottom.of.deposit <- 230 #for SW
-bottom.of.deposit <- 110 #for JR
+bottom.of.deposit <- 110 
 predict.depths <- seq(top.of.deposit,bottom.of.deposit,10)
 
 # calbrate the 14C dates_____________________ Note: positions = depth
