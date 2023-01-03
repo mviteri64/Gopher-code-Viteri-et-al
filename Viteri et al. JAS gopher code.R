@@ -1,17 +1,18 @@
-# LIBRARIES
+## LIBRARIES
 library(Bchron)
+library(ggplot2)
+library(ggsignif)
 
-# CHRONOLOGY__________________________________
-#Jasper Ridge
+#Radiocarbon dates
 JR <- read.csv("~/Jasper_Ridge_dates.csv") 
 
 color <- c("blue", rep("black",2), rep("blue",4), "black", rep("blue",3), rep("black",3),"blue",rep("black",3)) #black=gopher, blue=non-gopher
 plot(JR$X14C_age, JR$depth, xlim=c(max(JR$X14C_age),0), ylim=c(max(JR$depth),0), col=color, pch=16)
 
-#Jasper Ridge gophers
+#Dates from gopher incisors
 JR_gopher <- JR[c(2:3,8,12:14,16:18),]
 
-#JR non-fossorial species
+#Dates from non-gopher small mammal incisors
 JR_other <- JR[c(1,4:7,9:11,15),]
 
 #plot
@@ -25,15 +26,10 @@ par(mfrow=c(1,2))
 boxplot(JR_gopher[,4],  ylim=c(2000,0),xlab="gopher",ylab="Age")
 boxplot(JR_other[,4], ylim=c(2000,0),xlab="non-gopher", ylab="Age")
 
-#Add significance using wilcox (Mann-Whitney) test (non-parametric, mult. version of wilcox test)
-
-library(ggplot2)
-library(ggsignif)
-
+#add significance
 goph_v_non <- c("non-gopher", rep("gopher",2), rep("non-gopher",4), "gopher", rep("non-gopher",3),rep("gopher",3), "non-gopher", rep("gopher",3))
 JR_box <- data.frame(goph_v_non, as.numeric(JR[,4]))
 colnames(JR_box) <- c("Species", "Age")
-
 
 ggplot(JR_box, aes(x=Species, y=Age)) + 
   geom_boxplot() +
@@ -47,7 +43,7 @@ top.of.deposit <- 0
 bottom.of.deposit <- 110 
 predict.depths <- seq(top.of.deposit,bottom.of.deposit,10)
 
-# calbrate the 14C dates_____________________ Note: positions = depth
+#calbrate the 14C dates (Note: positions = depth)
 calibrated.dates <- BchronCalibrate(ages=PL[,2],ageSds = PL[,3], calCurves=c(rep("intcal20",nrow(PL))), positions = PL[,4], ids=PL[,1] )
 calibrated.dates<-BchronCalibrate(ages=SW[,3],ageSds=SW[,4],calCurves=c(rep("intcal20",nrow(SW))),positions=SW[,5],ids=SW[,1])
 calibrated.dates<-BchronCalibrate(ages=JR[,4],ageSds=JR[,5],calCurves=c(rep("intcal20",nrow(JR))),positions=JR[,6],ids=JR[,1])
@@ -59,12 +55,12 @@ calibrated.dates.other<-BchronCalibrate(ages=JR_other[,4],ageSds=JR_other[,5],ca
 color <- c("blue", rep("black",2), rep("blue",4), "black", rep("blue",3), rep("black",3),"blue",rep("black",2)) #black=gopher, blue=non-gopher
 plot(calibrated.dates,withPositions=T,xlim=c(2000,0),ylim=c(200,0),ylab="Depth (cm)",xlab="Cal yr BP",col=color, dateHeight=8,las=1,main="")
 
-#plot calibrated dates for gophers and for non-gophers seperately
+#plot calibrated dates for gophers and for non-gophers separately
 par(mfrow=c(1,2))
 plot(calibrated.dates.gopher,withPositions=T,xlim=c(2000,0),ylim=c(300,0),ylab="Depth (cm)",xlab="Cal yr BP",dateHeight=8,las=1,main="")
 plot(calibrated.dates.other,withPositions=T,xlim=c(2000,0),ylim=c(300,0),ylab="Depth (cm)",xlab="Cal yr BP",dateHeight=8,las=1,main="")
 
-# get credible intervals for each date_____________________
+#get credible intervals for each date
 sample_ages<-sampleAges(calibrated.dates)
 calibrated.table<-apply(sample_ages,2,quantile,prob=c(0.025,0.5,0.975))
 calibrated.table<-t(calibrated.table)
