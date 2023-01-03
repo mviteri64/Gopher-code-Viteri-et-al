@@ -117,7 +117,6 @@ lines(am.quants.other[,"50%"],am.quants.other$Depth,type="l",ylim=c(100,0),xlim=
 polygon(x=c(am.quants.other[,"2.5%"],rev(am.quants.other[,"97.5%"])),y=c(am.quants.other$Depth,rev(am.quants.other$Depth)),col=rgb(0,.7,1,.5),border=NA)
 polygon(x=c(am.quants.other[,"25%"],rev(am.quants.other[,"75%"])),y=c(am.quants.other$Depth,rev(am.quants.other$Depth)),col=rgb(0,.7,1,.9),border=NA)
 lines(am.quants.other[,"50%"],am.quants.other$Depth)
-#points(JR[,4], JR[,6], pch=19,col=color) #plotted on non-calibrated dates, fix?
 arrows(x0=chron.table[,12], y0=chron.table[,6], x1=chron.table[,10], y1=chron.table[,6], angle=90, code=3,  length=0.05, col=color, lwd=2)
 points(chron.table[,11], chron.table[,6], pch=19, cex=1.2, col=color)
 text(chron.table[,11], chron.table[,6], labels=chron.table$unit, pos=1, cex=0.9, font=2)
